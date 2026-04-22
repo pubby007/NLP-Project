@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon Review Sentiment Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="badge">NLP Project</span>
+            <h1>Amazon Review Sentiment Analyzer</h1>
+            <p class="subtitle">
+                Paste any product review and instantly see whether the sentiment
+                is <strong class="pos">Positive</strong> or
+                <strong class="neg">Negative</strong>.
+            </p>
+        </header>
+
+        <form method="POST" class="card">
+            <label for="review">Your review</label>
+            <textarea
+                id="review"
+                name="review"
+                rows="6"
+                placeholder="e.g. Great product, arrived quickly and works perfectly..."
+                required
+            >{{ review }}</textarea>
+            <button type="submit">Analyze Sentiment</button>
+        </form>
+
+        {% if prediction %}
+        <div class="card result {{ 'positive' if prediction == 'positive' else 'negative' }}">
+            <p class="result-label">Prediction</p>
+            <h2>
+                {% if prediction == 'positive' %}
+                    😊 Positive
+                {% else %}
+                    😞 Negative
+                {% endif %}
+            </h2>
+            {% if confidence is not none %}
+            <p class="confidence">
+                Confidence: <strong>{{ "%.1f"|format(confidence * 100) }}%</strong>
+            </p>
+            {% endif %}
+            <p class="model-info">Model: {{ model_name }}</p>
+        </div>
+        {% endif %}
+
+        <footer>
+            Built with Flask + scikit-learn (TF-IDF + Logistic Regression / Naive Bayes).
+        </footer>
+    </div>
+</body>
+</html>
